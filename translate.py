@@ -3,6 +3,7 @@ import string
 from PIL import Image
 from typing import List
 
+
 def clean_text(text_line: str) -> string: 
     ''' Cleans up the string so only a-z and 0-9 characters are available '''
 
@@ -29,7 +30,7 @@ def remove_emojis(text: str) -> string:
                            "]+", flags = re.UNICODE)
     return regrex_pattern.sub(r'',text)
 
-def merge_lines(line_counter: int):
+def merge_lines(line_counter: int) -> None:
     ''' For multi-line messages, combines them into a single JPG'''
     y_offset = 0
     line_list = [f'images/output/output_{i}.jpg' for i in range(1, line_counter + 1)]
@@ -39,7 +40,7 @@ def merge_lines(line_counter: int):
     
     max_width = max(widths)
     total_height = sum(heights)
-    
+
     new_im = Image.new(mode = 'RGB', size = (max_width, total_height), color=(255,255,255))
 
     for im in images:
@@ -47,16 +48,15 @@ def merge_lines(line_counter: int):
         y_offset += im.size[1]
 
     new_im.save('images/output/final.jpg')
+    return None
 
-def read_file(input_file: str) -> List:
+def read_file(input_file: str) -> List[str]:
     with open(input_file, "r") as original_text:
         lines = original_text.readlines()
     return lines
 
-def translate(letters: list, line_counter: int):
+def translate(letters: list[str], line_counter: int) -> None:
     x_offset = 0
-    letter_list = []
-    images = []
 
     letter_list = [f"images/symbols/{l if l!=' ' else ''}.jpg" for l in letters]
     images = [Image.open(x) for x in letter_list]
@@ -72,8 +72,9 @@ def translate(letters: list, line_counter: int):
         x_offset += im.size[0]
     
     new_im.save(f'images/output/output_{line_counter}.jpg')
+    return None
 
-def main(input_file: str):
+def main(input_file: str) -> None:
     input_txt = read_file(input_file)
     line_counter = 0
  
@@ -82,7 +83,7 @@ def main(input_file: str):
         clean_line = clean_text(input_line)
         translate(clean_line, line_counter)
 
-    merge_lines(line_counter)
+    return merge_lines(line_counter)
 
 if __name__ == "__main__":
     input_file = "input.txt"
