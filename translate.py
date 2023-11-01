@@ -11,8 +11,7 @@ def clean_text(text_line: str) -> string:
     no_emoji_str = remove_emojis(no_punc_str)
     no_url_str = re.sub(r'^https?:\/\/.*[\r\n]*', '', no_emoji_str, flags=re.MULTILINE)
     no_email_str = re.sub(r'\S*@\S*\s?', '', no_url_str)
-    no_space_str = no_email_str.replace(" ", "")
-    stripped_str = no_space_str.strip()
+    stripped_str = no_email_str.strip()
 
     return stripped_str
 
@@ -59,7 +58,7 @@ def translate(letters: list, line_counter: int):
     letter_list = []
     images = []
 
-    letter_list = [f'images/symbols/{l}.jpg' for l in letters]
+    letter_list = [f"images/symbols/{l if l!=' ' else ''}.jpg" for l in letters]
     images = [Image.open(x) for x in letter_list]
     widths, heights = zip(*(i.size for i in images))
 
